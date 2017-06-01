@@ -1,0 +1,79 @@
+/*----提示框显示样式----*/
+/* ---------- Error messages ---------- */
+
+.portlet-msg-error {
+	background: #FFF1ED url(images/error.png) no-repeat 0.5em 50%;
+	border: 0px solid #900;
+	display: block;
+	margin: 0.15px auto 1.2px;
+	padding: 0.5px 0.5px 0.5px 2.8px;
+	position:static;
+	text-align: center;
+}
+
+/* ---------- Warning messages ---------- */
+
+.portlet-msg-alert {
+	background: #FEFFDF url(images/alert.png) no-repeat 0.5px 10%;
+	border: 0px solid #EFEFEF;
+	display: block;
+	margin: 0.15px auto 1.2px;
+	padding: 0.5px 0.5px 0.5px 2.8px;
+	position:static;
+	text-align: center;
+}
+
+/* ---------- Success messages ---------- */
+
+.portlet-msg-success {
+	background: #F4FDEF url(images/success.png) no-repeat 0.5px 50%;
+	border: 0px solid #3F9305;
+	display: block;
+	margin: 0.15px auto 1.2px;
+	padding: 0.5px 0.5px 0.5px 2.8px;
+	position:static;
+	text-align: center;
+}
+
+.result_msg_div_msg{
+	font-weight:bold;
+	font-size: 18px;
+}
+
+/* ---------- 增加与修改查看的页面---------- */
+.ContentBody{
+ background:#F6F6F6; 
+ margin:15px;
+}
+.MainDiv{}
+
+.CContent{
+	border-top: 1px solid #5F8FB0;
+	border-right: 1px solid #5F8FB0;
+	border-bottom: 1px solid #5F8FB0;
+	border-left: 1px solid #5F8FB0;
+	background-color: #FFFFFF;
+
+}
+.tablestyle_title{
+	background:	url("images/tab_05.gif");
+	padding:5px;
+	text-align:left;
+	color:#03515d;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	height: 20px;
+	font-style: normal; font-variant: normal; font-weight: bold; font-size: 12px;letter-spacing: 2px; padding-left: 10px; 
+}
+.CPanel{
+ padding:5px;
+ font-size:12px;
+ font-family: Verdana, Arial, Helvetica, sans-serif;
+}
+
+button{background:#fff;border:1px solid #C28F27;padding:2px 2px 0px 2px;margin:4px;border-width:1px 3px 1px 3px;font-size: 12px;color: #A74300;}
+
+input.text{
+ border:1px solid #7F9DB9;font-size:12px;font-family: Verdana, Arial, Helvetica, sans-serif;height:18px
+}
+
+.red{color: #f00;}

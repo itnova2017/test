@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="login" extends="struts-default" namespace="/userAct">
+		<action name="login" class="userAct" method="doLogin">
+			<result name="login">index.jsp</result>
+			<result name="error">../jsp/error.jsp</result>
+			<result name="errorNullRole">../jsp/error2.jsp</result>
+			<result name="success">../jsp/index/main.jsp</result>
+		</action>
+		<action name="logout" class="userAct"  method="doLogout" >
+				 <result name="success"  type="redirect">http://localhost:8080/tywhAM/</result>
+ 				<!--<result name="success"  type="redirect">http://192.168.32.97:8080/tywhAM/</result>  -->
+		</action>
+		<action name="query" class="userAct"  method="doQuery" >
+				<result name="success">../jsp/index/main.jsp</result>
+		</action>
+		<action name="delete" class="userAct" method="doDelete" />
+		<action name="edit" class="userAct" method="doEdit">
+			<result name="editUser">jsp/user/editUser.jsp</result>
+		</action>
+		<action name="add" class="userAct" method="doAdd">
+			<result name="addUser">jsp/user/addUser.jsp</result>
+		</action>
+	</package>
+</struts>

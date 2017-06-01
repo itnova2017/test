@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" 
+	"http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<constant name="struts.objectFactory" value="spring" />
+	<package name="myApp" extends="struts-default">
+     	<!-- 全局变量,超时返回登录页面 -->
+		<global-results>
+			<result name="error">error.jsp</result>
+			<result name="input">jsp/user/listUsers.jsp</result>
+			<result name="loginPage">login.jsp</result>
+		</global-results>
+	</package>
+	<include file="struts/login.xml"></include>
+	<include file="struts/menu.xml"></include>
+	<include file="struts/userInfo.xml"></include>
+	<include file="struts/department.xml"></include>
+	<include file="struts/role.xml"></include>
+	<include file="struts/permission.xml"></include>
+	<include file="struts/log.xml"></include>
+	<include file="struts/personalLeave.xml"></include>
+	<include file="struts/attendance.xml"></include>
+	<include file="struts/orderMeals.xml"></include>
+</struts>    

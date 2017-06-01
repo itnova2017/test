@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="ordermeals" extends="struts-default" namespace="/ordermeals">
+		<global-results>
+			<result name="success">../jsp/ordermeals/view.jsp</result>
+			<result name="error">error.jsp</result>
+		</global-results>
+		<action name="queryList"  class="ordermeals" method="queryUserList"/>
+		<action name="queryAllList"  class="ordermeals" method="queryAllUserList">
+				<result name="view">../jsp/ordermeals/list.jsp</result>
+		</action>
+		<action name="repeatOM"  class="ordermeals" method="repeatOM">
+			<result name="repeat">../jsp/userInfo/repeat.jsp</result>
+		</action>
+		<action name="saveOrderMeals"  class="ordermeals" method="saveOrderMeals"/>
+		<action name="deleteOrderMeals"  class="ordermeals" method="deleteOrderMeals"/>
+	</package>
+</struts>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="permission" extends="struts-default" namespace="/permission">
+		<global-results>
+			<result name="success">../jsp/permission/view.jsp</result>
+			<result name="error">error.jsp</result>
+			<result name="setPermission">../jsp/permission/setPermission.jsp</result>
+			<result name="setBusiness" >../jsp/permission/setBusiness.jsp</result>
+			<result name="lookPermission" >../jsp/permission/lookPermission.jsp</result>
+			<result name="lookBusiness">../jsp/permission/lookBusiness.jsp</result>
+		</global-results>
+		<action name="queryList"  class="permission" method="queryAllDaptToRoleList"/>
+		<action name="setPermission"  class="permission" method="setPermission"/>
+		<action name="savePermission"  class="permission" method="savePermission"/>
+		<action name="savePermissions"  class="permission" method="savePermissions"/>
+		<action name="setBusiness"  class="permission" method="setBusiness"/>
+		<action name="saveBusiness"  class="permission" method="saveBusiness"/>
+		<action name="lookPermission"  class="permission" method="lookPermission"/>
+		<action name="deletePermission"  class="permission" method="deletePermission"/>
+		<action name="deletePermissions"  class="permission" method="deletePermissions"/>
+		<action name="lookBusiness"  class="permission" method="lookBusiness"/>
+		<action name="deleteBusiness"  class="permission" method="deleteBusiness"/>
+		<action name="deletePermissionById"  class="permission" method="deletePermissionById"/>
+	</package>
+</struts>

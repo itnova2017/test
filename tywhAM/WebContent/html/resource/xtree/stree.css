@@ -1,0 +1,94 @@
+.webfx-tree-container {
+	margin: 0px;
+	padding: 0px;
+	font: icon;
+	white-space: nowrap;
+}
+
+.webfx-tree-item {
+	padding: 0px;
+	margin: 0px;
+	font: icon;
+	color: black;
+	white-space: nowrap;
+}
+
+.webfx-tree-item a, .webfx-tree-item a:active, .webfx-tree-item a:hover {
+	margin-left: 3px;
+	padding: 1px 2px 1px 2px;
+}
+
+.webfx-tree-item a {
+	color: black;
+	text-decoration: none;
+}
+
+.webfx-tree-item a:hover {
+	color: blue;
+	text-decoration: underline;
+}
+
+.webfx-tree-item a:active {
+	background: highlight;
+	color: highlighttext;
+	text-decoration: none;
+}
+
+.webfx-tree-item img {
+	vertical-align: middle;
+	border: 0px;
+}
+
+.webfx-tree-icon {
+	width: 8px;
+	height: 11px;
+}
+.webfx-tree-item a.selected {
+	color: selectedtext;
+	background: selected;
+}
+
+.webfx-tree-item a.selected-inactive {
+	color: windowtext;
+	background: buttonface;
+}
+
+/**修改样式begin*/
+
+
+
+
+.left-font03 {
+	font-family: "宋体";
+	font-size: 12px;
+	color: #555555;
+	height: 29;
+	text-decoration: none;
+}
+
+.left-table01 {
+	border-top-width: 2px;
+	border-top-style: solid;
+	border-top-color: #B8C9D6;
+	margin-left: 14px;
+}
+
+.left-table02 {
+	margin-top: 8px;
+	margin-bottom: 8px;
+	font-family: "宋体";
+	font-size: 12px;
+	color: #555555;
+	text-decoration: none;
+}
+
+.left-table03 {
+	margin-top: 6px;
+	font-family: "宋体";
+	font-size: 12px;
+	color: #555555;
+	text-decoration: none;
+	background-image: url(html/resource/xtree/images/nav02.gif);
+}
+
+

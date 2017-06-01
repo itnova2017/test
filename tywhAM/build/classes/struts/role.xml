@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="role" extends="struts-default" namespace="/role">
+		<global-results>
+			<result name="success">../jsp/role/view.jsp</result>
+			<result name="error">error.jsp</result>
+		</global-results>
+		<action name="queryList"  class="role" method="queryAllRoleList"/>
+		<action name="queryUserByRoleId"  class="role" method="queryUserByRoleId">
+			<result name="queryUser">../jsp/role/viewUser.jsp</result>
+		</action>
+		<action name="deleteRoleById"  class="role" method="deleteRoleById"/>
+		<action name="deleteRoleByIds"  class="role" method="deleteRoleByIds"/>
+		<action name="showSaveRole"  class="role" method="showSaveRole">
+			<result name="save">../jsp/role/save.jsp</result>
+		</action>
+		<action name="saveRole"  class="role" method="saveRole"/>
+		<action name="repeatName"  class="role" method="repeatName">
+			<result name="repeat">../jsp/userInfo/repeat.jsp</result>
+		</action>
+		<action name="showEditRoleById"  class="role" method="showEditRoleById">
+			<result name="edit">../jsp/role/edit.jsp</result>
+		</action>
+		<action name="editRole"  class="role" method="editRole"/>
+	</package>
+</struts>

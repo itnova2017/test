@@ -1,0 +1,490 @@
+package com.tywh.action;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+
+import com.opensymphony.xwork2.ActionSupport;
+import com.tywh.orm.TDepartRoleUser;
+import com.tywh.orm.TDepartment;
+import com.tywh.orm.TDepartmentUser;
+import com.tywh.orm.TRole;
+import com.tywh.orm.TUserinfo;
+import com.tywh.service.TDepartmentService;
+import com.tywh.service.TLogService;
+import com.tywh.service.TRoleService;
+import com.tywh.service.TUserInfoService;
+import com.tywh.util.Page;
+
+/**
+ *	RoleAction 角色
+ *  author：
+ *  2014-7-4 下午4:17:09
+ */
+public class RoleAction extends ActionSupport
+{
+	private static final long	serialVersionUID	= 6741604435083831410L;
+	private static Log log = LogFactory.getLog(UserInfoAction.class);
+	private TRoleService troleService;
+	private TDepartmentService departmentService;
+	private TUserInfoService userInfoService;
+	private TLogService  logService;
+	HttpServletRequest  request = ServletActionContext.getRequest();
+	HttpServletResponse  response= ServletActionContext.getResponse();
+	
+	protected String getParam(String key) {
+		if(ServletActionContext.getRequest().getParameter(key)!=null)
+		{
+			return ServletActionContext.getRequest().getParameter(key).trim();
+		}
+		else
+		{
+			return ServletActionContext.getRequest().getParameter(key);
+		}
+	}
+	
+	protected String[] getParams(String key) {
+		return ServletActionContext.getRequest().getParameterValues(key);
+	}
+	
+	/**
+	 * 查询部门下的所有的角色
+	 */
+	public  String  queryAllRoleList(){
+		try
+		{
+			log.info("查询部门下的所有角色列表----------------");
+			String daptId =getParam("daptId");
+			String roleName =getParam("roleName");
+			String tempPageSize = getParam("pageSize");
+			String tempCurPage = getParam("curPage");
+			int pageSize = tempPageSize == null ? 20 : Integer.parseInt(tempPageSize);
+			int curPage = tempCurPage == null ? 1 : Integer.parseInt(tempCurPage);
+			Page page = new Page(pageSize, curPage);
+			//查询数据
+			List<TRole> list = troleService.queryAllRoleList(daptId,roleName,page);//查询用户的分页
+			
+			//通过部门ID查询部门的信息
+			TDepartment td=new TDepartment();
+			td.setT_id(Integer.parseInt(daptId));
+			TDepartment tdv =departmentService.queryDaptById(td);
+			String tdName=tdv.getT_departName();
+			
+			SaveLog("查询部门下的所有的角色,部门id:"+daptId);
+			request.setAttribute("daptId", daptId);
+			request.setAttribute("tdName", tdName);
+			request.setAttribute("roleName", roleName);
+			request.setAttribute("list", list);
+			request.setAttribute("page", page);
+			return SUCCESS;
+		}
+		catch (Exception  e)
+		{
+			//在此捕获“异常”
+			e.printStackTrace();
+			log.error("RoleAction 中的queryAllRoleList异常![" + e.getMessage() + "]", e);
+			return ERROR;
+		}
+	}
+	
+	
+	/**
+	 * 角色的删除方法
+	 */
+	public String deleteRoleById()
+	{
+		log.info("通过角色Id删除角色----------------");
+		String roleId =getParam("roleId");
+		String daptId =getParam("daptId");
+		//删除部门用户角色表数据
+		//删除部门角色菜单表数据
+		//删除部门业务表数据
+		troleService.deleteRoleById(roleId);//通过角色Id删除角色	
+		SaveLog("通过角色Id删除角色,部门id:"+daptId+",角色id:"+roleId);
+		request.setAttribute("daptId", daptId);
+		return queryAllRoleList();
+	}
+	
+	/**
+	 * 批量删除
+	 */
+	public String  deleteRoleByIds()
+	{
+		String roleIds =getParam("roleIds");
+		String daptId =getParam("daptId");
+		String[] roleId=roleIds.split(",");
+		for(String s:roleId){
+			if(!s.trim().equals(""))
+			{
+				troleService.deleteRoleById(s);//通过角色Id删除角色
+			}
+		}
+		SaveLog("批量角色Id删除角色,部门id:"+daptId+",角色ids:"+roleIds);
+		request.setAttribute("daptId", daptId);
+		return queryAllRoleList();
+	}
+	
+	/**
+	 * 跳转到角色添加页面
+	 */
+	public String showSaveRole()
+	{
+		try
+		{
+			String daptId =getParam("daptId");
+			//通过部门ID 查询当前部门下的所有员工
+			TDepartmentUser tdu=new TDepartmentUser();
+			tdu.setT_departId(Integer.parseInt(daptId));
+			List<TDepartmentUser>   duList=departmentService.queryDaptUserById(tdu);
+			List<TUserinfo> userList=new ArrayList<TUserinfo>();
+			if(null!=duList && duList.size()>0)
+			{
+				for(TDepartmentUser user:duList)
+				{
+					TUserinfo tu =new TUserinfo();
+					tu.setT_id(user.getT_userId());
+					TUserinfo	u=userInfoService.queryUserInfo(tu);
+					userList.add(u);
+				}
+			}
+			SaveLog("角色添加,部门id:"+daptId);
+			request.setAttribute("daptId", daptId);
+			request.setAttribute("userList", userList);
+		}
+		catch (ParseException e)
+		{
+			//在此捕获“异常”
+			e.printStackTrace();
+		}
+		return "save";
+	}
+
+	/**
+	 * 保存角色
+	 */
+	public String saveRole()
+	{
+		try
+		{
+			//获取所有的增加字段
+			String daptId =getParam("daptId");
+			String roleName =getParam("roleName");
+			String[] userIds =getParams("userIds");
+			String isUse =getParam("isUse");
+
+			TRole tr=new TRole();
+			tr.setT_departId(Integer.parseInt(daptId));
+			tr.setT_roleName(roleName==null?"":roleName);
+			tr.setT_isUse(isUse==null || "".equals(isUse) ? null : Integer.parseInt(isUse));
+			troleService.saveRole(tr);//添加角色
+			
+			//添加角色与部门用户关联表数据
+			TRole tu=troleService.queryRole(tr);
+				if(null!=tu)
+				{
+					for(String user:userIds)
+					{
+						TDepartRoleUser tdru=new TDepartRoleUser();
+						tdru.setT_roleId(tu.getT_id());
+						tdru.setT_daptId(Integer.parseInt(daptId));
+						tdru.setT_userId(Integer.parseInt(user));
+						troleService.saveDaptRoleUser(tdru);
+					}
+				}
+			SaveLog("保存角色,部门id:"+daptId+",角色名称:"+roleName+",用户ids:"+userIds);
+			request.setAttribute("daptId", daptId);
+		}
+		catch (ParseException e)
+		{
+			e.printStackTrace();
+		}
+		return queryAllRoleList();
+	}
+	
+	/**
+	 * 查询当前的角色名是否唯一
+	 */
+	public String repeatName()
+	{
+		String name =getParam("name");
+		String daptId =getParam("daptId");
+		boolean  has= troleService.repeatName(name.trim());//查询当前的角色是否唯一
+		request.setAttribute("has", has);
+		request.setAttribute("daptId", daptId);
+		return "repeat";
+	}
+	
+	
+	/**
+	 * 跳转到编辑页面
+	 */
+	
+	public String showEditRoleById()
+	{
+		try
+		{
+			log.info("进入showEditRoleById方法");
+			String roleId =getParam("roleId");
+			String daptId =getParam("daptId");
+			TRole tr=new TRole();
+			tr.setT_id(Integer.parseInt(roleId));
+			//查询角色信息
+			TRole  trs=troleService.queryRoleById(tr);
+			//查询角色下的人员关联表信息
+			//先通过部门Id查询所有人员
+			TDepartmentUser tdu=new TDepartmentUser();
+			tdu.setT_departId(Integer.parseInt(daptId));
+			List<TDepartmentUser>   duList=departmentService.queryDaptUserById(tdu);
+			List<TUserinfo> userList=new ArrayList<TUserinfo>();
+			if(null!=duList && duList.size()>0)
+			{
+				for(TDepartmentUser user:duList)
+				{
+					TUserinfo tu =new TUserinfo();
+					tu.setT_id(user.getT_userId());
+					TUserinfo	u=userInfoService.queryUserInfo(tu);
+					userList.add(u);
+				}
+			}
+			//查询部门角色人员关联表的数据，进行复选框选择
+			TDepartRoleUser tdru=new TDepartRoleUser();
+			tdru.setT_daptId(Integer.parseInt(daptId));
+			tdru.setT_roleId(Integer.parseInt(roleId));
+			List<TDepartRoleUser>   druList=departmentService.queryDaptRoleUserById(tdru);
+			
+			if(null!=druList && druList.size()>0)
+			{
+				StringBuffer  users=new StringBuffer();
+				//获取所有当前角色的用户集合
+				for(TDepartRoleUser tdr:druList)
+				{
+					users.append(","+tdr.getT_userId());
+				}
+				users.append(",");
+				//循环当前角色中被选中的用户
+				for(TUserinfo user:userList)
+				{
+					boolean  i=users.toString().contains(","+user.getT_id()+",");
+					if(i)
+					{
+						user.setIsCheck("1");
+					}
+				}
+				//保存的是已有的用户选中集合  用于比对修改后的用户 如果没有修改就不进行数据表
+				request.setAttribute("users", users);
+			}
+			SaveLog("角色编辑页面,部门id:"+daptId+",角色id:"+roleId);
+			request.setAttribute("daptId", daptId);
+			request.setAttribute("trs",trs);
+			request.setAttribute("userList", userList);
+
+		}
+		catch (ParseException e)
+		{
+			log.error("RoleAction中的showEditRoleById跳转到部门修改异常![" + e.getMessage() + "]", e);
+			e.printStackTrace();
+		}
+		return "edit";
+	}
+	
+	/**
+	 * 编辑保存角色数据
+	 */
+	public String editRole()
+	{
+		try
+		{
+			//修改角色信息  
+			//获取所有的增加字段
+			String daptId =getParam("daptId");
+			String roleId =getParam("roleId");
+			String roleName =getParam("roleName");
+			String[] userIds =getParams("userIds");
+			String users =getParam("users");
+			
+			//这部分主要是为了查询原来的部门Ids
+			TRole tr=new TRole();
+			tr.setT_id(Integer.parseInt(roleId));
+			//查询角色信息
+			TRole  trs=troleService.queryRoleById(tr);
+			
+			if(null != trs){
+				TRole trt=new TRole();
+				trt.setT_id(Integer.parseInt(roleId));
+				trt.setT_roleName(roleName==null?"":roleName);
+				trt.setT_departId(Integer.parseInt(daptId));
+				//修改角色
+				troleService.editRole(trt);
+				//修改关联表部门角色用户数据
+				StringBuffer userss=new StringBuffer();
+				for(String user:userIds)
+				{
+					userss.append(","+user);
+				}
+				userss.append(",");
+				if(!users.equals(userss.toString()));
+				{
+					//删除原有的关联数据
+					String[] ss=users.split(",");
+					for(String s:ss)
+					{
+						if(!s.equals("")){
+							TDepartRoleUser tdru=new TDepartRoleUser();
+							tdru.setT_userId(Integer.parseInt(s));
+							tdru.setT_daptId(Integer.parseInt(daptId));
+							tdru.setT_roleId(Integer.parseInt(roleId));
+							troleService.deleteDaptRoleUser(tdru);
+						}
+					}
+					
+					//增加新数据
+					for(String sss:userIds)
+					{
+						TDepartRoleUser tdru=new TDepartRoleUser();
+						tdru.setT_userId(Integer.parseInt(sss));
+						tdru.setT_daptId(Integer.parseInt(daptId));
+						tdru.setT_roleId(Integer.parseInt(roleId));
+						troleService.insertDaptRoleUser(tdru);
+					}
+				}
+			}
+			SaveLog("保存角色,部门id:"+daptId+",角色id:"+roleId+",用户ids:"+userIds);
+		}
+		catch (ParseException e)
+		{
+			log.error("RoleAction 中的editRole异常![" + e.getMessage() + "]", e);
+			e.printStackTrace();
+		}
+		return queryAllRoleList();
+	}
+	
+	
+	/**
+	 * 通过角色Id查询用户
+	 */
+	public String queryUserByRoleId()
+	{
+		try
+		{
+			log.info("进入queryUserByRoleId方法");
+			String roleId =getParam("roleId");
+			String daptId =getParam("daptId");
+			TRole tr=new TRole();
+			tr.setT_id(Integer.parseInt(roleId));
+			//查询角色信息
+			TRole  trs=troleService.queryRoleById(tr);
+			//查询角色下的人员关联表信息
+			//先通过部门Id查询所有人员
+			TDepartmentUser tdu=new TDepartmentUser();
+			tdu.setT_departId(Integer.parseInt(daptId));
+			List<TDepartmentUser>   duList=departmentService.queryDaptUserById(tdu);
+			List<TUserinfo> userList=new ArrayList<TUserinfo>();
+			if(null!=duList && duList.size()>0)
+			{
+				for(TDepartmentUser user:duList)
+				{
+					TUserinfo tu =new TUserinfo();
+					tu.setT_id(user.getT_userId());
+					TUserinfo	u=userInfoService.queryUserInfo(tu);
+					userList.add(u);
+				}
+			}
+			//查询部门角色人员关联表的数据，进行复选框选择
+			TDepartRoleUser tdru=new TDepartRoleUser();
+			tdru.setT_daptId(Integer.parseInt(daptId));
+			tdru.setT_roleId(Integer.parseInt(roleId));
+			List<TDepartRoleUser>   druList=departmentService.queryDaptRoleUserById(tdru);
+			
+			if(null!=druList && druList.size()>0)
+			{
+				StringBuffer  users=new StringBuffer();
+				//获取所有当前角色的用户集合
+				for(TDepartRoleUser tdr:druList)
+				{
+					users.append(","+tdr.getT_userId());
+				}
+				users.append(",");
+				//循环当前角色中被选中的用户
+				for(TUserinfo user:userList)
+				{
+					boolean  i=users.toString().contains(","+user.getT_id()+",");
+					if(i)
+					{
+						user.setIsCheck("1");
+					}
+				}
+				//保存的是已有的用户选中集合  用于比对修改后的用户 如果没有修改就不进行数据表
+				request.setAttribute("users", users);
+			}
+			SaveLog("角色Id查询用户,部门id:"+daptId+",角色id:"+roleId);
+			request.setAttribute("daptId", daptId);
+			request.setAttribute("trs",trs);
+			request.setAttribute("userList", userList);
+
+		}
+		catch (ParseException e)
+		{
+			log.error("RoleAction中的queryUserByRoleId跳转到角色查看人员异常![" + e.getMessage() + "]", e);
+			e.printStackTrace();
+		}
+		return "queryUser";
+	}
+	
+	public void SaveLog(String content)
+	{
+		try
+		{
+			HttpSession session = request.getSession();//获取session中当前登陆的人
+			TUserinfo curUser = (TUserinfo) session.getAttribute("curManagUser");
+			logService.saveLog(content, curUser.getT_id()+"-"+curUser.getT_userName());
+		}
+		catch (ParseException e)
+		{
+			log.error("AuditFolderAction 中的SaveLog异常![" + e.getMessage() + "]", e);
+			e.printStackTrace();
+		}
+	}
+	
+	public TRoleService getTroleService()
+	{
+		return troleService;
+	}
+	public void setTroleService(TRoleService troleService)
+	{
+		this.troleService = troleService;
+	}
+	public TDepartmentService getDepartmentService()
+	{
+		return departmentService;
+	}
+	public void setDepartmentService(TDepartmentService departmentService)
+	{
+		this.departmentService = departmentService;
+	}
+	public TUserInfoService getUserInfoService()
+	{
+		return userInfoService;
+	}
+	public void setUserInfoService(TUserInfoService userInfoService)
+	{
+		this.userInfoService = userInfoService;
+	}
+	public TLogService getLogService()
+	{
+		return logService;
+	}
+	public void setLogService(TLogService logService)
+	{
+		this.logService = logService;
+	}
+	
+	
+}

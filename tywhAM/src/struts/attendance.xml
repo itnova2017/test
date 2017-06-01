@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="attendance" extends="struts-default" namespace="/attendance">
+		<global-results>
+			<result name="success">../jsp/attendance/view.jsp</result>
+			<result name="error">error.jsp</result>
+			<result name="allView">../jsp/attendance/allView.jsp</result>
+			<result name="allView2">../jsp/attendance/allView2.jsp</result>
+			<result name="allViewDapt">../jsp/attendance/allViewDapt.jsp</result>
+		</global-results>
+		<action name="queryList"  class="attendance" method="queryAttendanceList"/>
+		<action name="queryAllList"  class="attendance" method="queryAllAttendanceList"/>
+		<action name="queryAllListDapt"  class="attendance" method="queryAllAttendanceListByDapt"/>
+		<action name="showImportAttendance"  class="attendance" method="showImportAttendance">
+			<result name="import">../jsp/attendance/import.jsp</result>
+		</action>
+		<action name="importAttendance"  class="attendance" method="importAttendance"/>
+		<action name="showSaveAttendance"  class="attendance" method="showSaveAttendance">
+			<result name="save">../jsp/attendance/save.jsp</result>
+		</action>
+		<action name="saveAttendance"  class="attendance" method="saveAttendance"/>
+		<action name="repeatName"  class="attendance" method="repeatName">
+			<result name="repeat">../jsp/userInfo/repeat.jsp</result>
+		</action>
+		<action name="queryAllListForMonth"  class="attendance" method="queryAllListForMonthList"/>
+		<action name="showImportAttendances"  class="attendance" method="showImportAttendances">
+			<result name="imports">../jsp/attendance/imports.jsp</result>
+		</action>
+		<action name="importAttendances"  class="attendance" method="importAttendances"/>
+		<action name="showImportMonthAllAttendance"  class="attendance" method="showImportMonthAllAttendance">
+			<result name="importMonths">../jsp/attendance/importMonths.jsp</result>
+		</action>
+		<action name="importMonthAllAttendances"  class="attendance" method="importMonthAllAttendances"/>
+	</package>
+</struts>

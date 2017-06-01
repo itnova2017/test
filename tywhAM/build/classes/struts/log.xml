@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="log" extends="struts-default" namespace="/log">
+		<global-results>
+			<result name="success">../jsp/log/view.jsp</result>
+			<result name="error">error.jsp</result>
+		</global-results>
+		<action name="queryList"  class="log" method="queryAllLogList"/>
+		<action name="viewLog"  class="log" method="viewLog">
+					<result name="viewLog">../jsp/log/viewLog.jsp</result>
+		</action>
+	</package>
+</struts>

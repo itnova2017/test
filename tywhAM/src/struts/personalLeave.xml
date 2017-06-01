@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="personalLeave" extends="struts-default" namespace="/personalLeave">
+		<global-results>
+			<result name="success">../jsp/personalLeave/view.jsp</result>
+			<result name="error">error.jsp</result>
+			<result name="audit">../jsp/personalLeave/oneStageAuditOfLeave.jsp</result>
+			<result name="audit2">../jsp/personalLeave/twoStageAuditOfLeave.jsp</result>
+			<result name="viewAll">../jsp/personalLeave/personalLeaveAllStatistics.jsp</result>
+			<result name="viewAllUser">../jsp/personalLeave/viewAll.jsp</result>
+		</global-results>
+		<action name="queryList"  class="personalLeave" method="queryAllPersonalLeaveList"/>
+		<action name="queryAllList"  class="personalLeave" method="queryAllUserPersonalLeaveList"/>
+		<action name="deletePersonalLeaveById"  class="personalLeave" method="deletePersonalLeaveById"/>
+		<action name="showSavepersonalLeave"  class="personalLeave" method="showSavepersonalLeave">
+			<result name="save">../jsp/personalLeave/save.jsp</result>
+		</action>
+		<action name="savePersonalLeave"  class="personalLeave" method="savePersonalLeave"/>
+		<action name="showEditPersonalLeaveById"  class="personalLeave" method="showEditPersonalLeaveById">
+			<result name="edit">../jsp/personalLeave/edit.jsp</result>
+		</action>
+		<action name="editPersonalLeave"  class="personalLeave" method="editPersonalLeave"/>
+		<action name="showPersonalLeaveStatistics"  class="personalLeave" method="showPersonalLeaveStatistics">
+			<result name="view">../jsp/personalLeave/personalLeaveStatistics.jsp</result>
+		</action>
+		<action name="oneStageAuditOfLeave"  class="personalLeave" method="oneStageAuditOfLeave"/>
+		<action name="personalLeaveAuditSuccess"  class="personalLeave" method="personalLeaveAuditSuccess"/>
+		<action name="twoStageAuditOfLeave"  class="personalLeave" method="twoStageAuditOfLeave"/>
+		<action name="personalLeaveTwoAuditSuccess"  class="personalLeave" method="personalLeaveTwoAuditSuccess"/>
+		<action name="showPersonalLeaveAllStatistics"  class="personalLeave" method="showPersonalLeaveAllStatistics"/>
+		<action name="showPersonalLeaveById"  class="personalLeave" method="showPersonalLeaveById">
+			<result name="show">../jsp/personalLeave/showPersonalLeave.jsp</result>
+		</action>
+		<action name="showPersonalLeaveStatisticsById"  class="personalLeave" method="showPersonalLeaveStatisticsById">
+			<result name="edit">../jsp/personalLeave/showPersonalLeaveStatistics.jsp</result>
+		</action>
+		<action name="editPersonalLeaveStatistics"  class="personalLeave" method="editPersonalLeaveStatistics"/>
+	</package>
+</struts>

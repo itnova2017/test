@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="department" extends="struts-default" namespace="/department">
+		<global-results>
+			<result name="success">../jsp/department/view.jsp</result>
+			<result name="error">error.jsp</result>
+		</global-results>
+		<action name="queryList"  class="department" method="queryAllDaptList"/>
+		<action name="deleteDepartmentById"  class="department" method="deleteDepartmentById"/>
+		<action name="deleteDepartmentByIds"  class="department" method="deleteDepartmentByIds"/>
+		<action name="showSaveDepartment"  class="department" method="showSaveDepartment">
+			<result name="save">../jsp/department/save.jsp</result>
+		</action>
+		<action name="saveDepartment"  class="department" method="saveDepartment"/>
+		<action name="repeatName"  class="department" method="repeatName">
+			<result name="repeat">../jsp/userInfo/repeat.jsp</result>
+		</action>
+		<action name="showEditDepartmentById"  class="department" method="showEditDepartmentById">
+			<result name="edit">../jsp/department/edit.jsp</result>
+		</action>
+		<action name="editDepartmentInfo"  class="department" method="editDepartmentInfo"/>
+		
+		<action name="ajax1"  class="department" method="ajax1">
+			<result name="ajax1">../jsp/department/Ajax1.jsp</result>
+		</action>
+		
+		<action name="yanZhengMingCheng"  class="department" method="yanZhengMingCheng"/>
+	</package>
+</struts>

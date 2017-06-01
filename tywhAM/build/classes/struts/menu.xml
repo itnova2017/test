@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="menu" extends="struts-default" namespace="/menu">
+		<global-results>
+			<result name="success">../jsp/menu/view.jsp</result>
+			<result name="error">error.jsp</result>
+		</global-results>
+		<action name="getMenu"  class="menu" method="getMenu">
+			 <result name="input"  type="redirect">http://${ipconfig}:8080/tywhAM/</result> 
+			<result name="tree">../jsp/tree.jsp</result>
+		</action>
+		<action name="queryList"  class="menu" method="queryAllMenuList"/>
+		<action name="deleteMenuById"  class="menu" method="deleteMenuById"/>
+		<action name="deleteMenuByIds"  class="menu" method="deleteMenuByIds"/>
+		<action name="showSaveMenu"  class="menu" method="showSaveMenu">
+			<result name="save">../jsp/menu/save.jsp</result>
+		</action>
+		<action name="saveMenu"  class="menu" method="saveMenu"/>
+		<action name="repeatName"  class="menu" method="repeatName">
+			<result name="repeat">../jsp/userInfo/repeat.jsp</result>
+		</action>
+		<action name="showEditMenuById"  class="menu" method="showEditMenuById">
+			<result name="edit">../jsp/menu/edit.jsp</result>
+		</action>
+		<action name="editMenu"  class="menu" method="editMenu"/>
+		<action name="addMenus"  class="menu" method="addMenus"></action>
+	</package>
+</struts>

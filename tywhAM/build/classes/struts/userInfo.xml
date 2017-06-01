@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN"
+        "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<package name="userInfo" extends="struts-default" namespace="/userInfo">
+		<global-results>
+			<result name="success">../jsp/userInfo/view.jsp</result>
+			<result name="editInfo">../jsp/userInfo/editInfo.jsp</result>
+			<result name="error">error.jsp</result>
+		</global-results>
+		<action name="queryList"  class="userInfo" method="queryAllUserList"/>
+		<action name="deleteUserById"  class="userInfo" method="deleteUserById"/>
+		<action name="deleteUserByIds"  class="userInfo" method="deleteUserByIds"/>
+		<action name="showSaveUser"  class="userInfo" method="showSaveUser">
+			<result name="save">../jsp/userInfo/save.jsp</result>
+		</action>
+		<action name="saveUserInfo"  class="userInfo" method="saveUserInfo"/>
+		<action name="repeatName"  class="userInfo" method="repeatName">
+			<result name="repeat">../jsp/userInfo/repeat.jsp</result>
+		</action>
+		<action name="showEditUserById"  class="userInfo" method="showEditUserById">
+			<result name="edit">../jsp/userInfo/edit.jsp</result>
+		</action>
+		<action name="editUserInfo"  class="userInfo" method="editUserInfo"/>
+		<action name="showEditUserInfoById"  class="userInfo" method="showEditUserInfoById"/>
+		<action name="editUserInfos"  class="userInfo" method="editUserInfos"/>
+	</package>
+</struts>

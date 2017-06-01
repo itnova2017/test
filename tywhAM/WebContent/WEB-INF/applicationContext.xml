@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd 
+	http://www.springframework.org/schema/util 
+	http://www.springframework.org/schema/util/spring-util-3.0.xsd 
+	http://www.springframework.org/schema/context 
+	http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+	http://www.springframework.org/schema/tx 
+	http://www.springframework.org/schema/tx/spring-tx-3.0.xsd 
+	http://www.springframework.org/schema/aop 
+	http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+   <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+	     <property name="locations">
+	            <list>
+	               <value>classpath:config.properties</value>
+	            </list>
+	     </property>
+   </bean>
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver">
+		</property>
+			<property name="url" value="jdbc:mysql://${ipconfig}:3306/tywham">
+		</property>
+		<property name="username" value="${username}"></property>
+		<property name="password" value="${password}"></property>
+		<property name="maxActive"><value>10000000</value></property> 
+        <property name="maxIdle"><value>5000000</value></property> 
+        <property name="minIdle"><value>100</value></property> 
+       
+        <!-- 超时等待时间以毫秒为单位  --> 
+        <property name="maxWait"><value>-1</value></property> 
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<!-- if use the hibernate.cfg.xml as dataSource configuration, cancel the annotations -->
+		<!-- remove other properties and dataSource bean. -->
+		<!-- 
+		<property name="configLocation" value="classpath:hibernate.cfg.xml" />
+		 -->
+		<property name="dataSource">
+			<ref bean="dataSource" />
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+					org.hibernate.dialect.MySQLDialect
+				</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<property name="mappingResources">
+			<list>
+				<value>com/tywh/orm/TUserinfo.hbm.xml</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory">
+			<ref local="sessionFactory" />
+		</property>
+	</bean>
+
+	<bean id="hibernateTemplate" class="org.springframework.orm.hibernate3.HibernateTemplate">
+		<property name="sessionFactory">
+			<ref bean="sessionFactory" />
+		</property>
+	</bean>
+
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="query*" propagation="REQUIRED" />
+			<tx:method name="insert*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="update*" propagation="REQUIRED" />
+			<tx:method name="edit*" propagation="REQUIRED" />
+			<tx:method name="download*" propagation="REQUIRED" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 登录配置 -->
+	<bean id="userAct" class="com.tywh.action.UserManagerAct" scope="prototype">
+		<property name="tuserService" ref="tuserService"></property>
+		<property name="troleService" ref="troleService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="tuserService" class="com.tywh.service.TUserManagerService">
+		<property name="dao" ref="dao"></property>
+	</bean>
+	
+	<bean id="dao" class="com.tywh.dao.BaseDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 用户配置 -->
+	<bean id="userInfo" class="com.tywh.action.UserInfoAction" scope="prototype">
+		<property name="userInfoService" ref="userInfoService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="userInfoService" class="com.tywh.service.TUserInfoService">
+		<property name="userInfoDao" ref="userInfoDao"></property>
+	</bean>
+	
+	<bean id="userInfoDao" class="com.tywh.dao.UserInfoDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 部门配置 -->
+	<bean id="department" class="com.tywh.action.DepartmentAction" scope="prototype">
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="userInfoService" ref="userInfoService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	<bean id="departmentService" class="com.tywh.service.TDepartmentService">
+		<property name="departDao" ref="departDao"></property>
+	</bean>
+	
+	<bean id="departDao" class="com.tywh.dao.DepartmentDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 角色配置 -->
+	<bean id="role" class="com.tywh.action.RoleAction" scope="prototype">
+		<property name="troleService" ref="troleService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="userInfoService" ref="userInfoService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="troleService" class="com.tywh.service.TRoleService">
+		<property name="roledao" ref="roledao"></property>
+		<property name="departDao" ref="departDao"></property>
+	</bean>
+	
+	<bean id="roledao" class="com.tywh.dao.RoleDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 权限配置 -->
+	<bean id="permission" class="com.tywh.action.PermissionAction" scope="prototype">
+		<property name="troleService" ref="troleService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="menuService" ref="menuService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<!-- 菜单配置 -->
+	<bean id="menu" class="com.tywh.action.MenuAction" scope="prototype">
+		<property name="troleService" ref="troleService"></property>
+		<property name="menuService" ref="menuService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="menuService" class="com.tywh.service.TMenuService">
+		<property name="menuDao" ref="menuDao"></property>
+		<property name="departDao" ref="departDao"></property>
+	</bean>
+	
+	<bean id="menuDao" class="com.tywh.dao.MenuDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+		<!-- 日志配置 -->
+	<bean id="log" class="com.tywh.action.LogAction" scope="prototype">
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="logService" class="com.tywh.service.TLogService">
+		<property name="logDao" ref="logDao"></property>
+	</bean>
+	
+	<bean id="logDao" class="com.tywh.dao.LogDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+		<!-- 请假配置 -->
+	<bean id="personalLeave" class="com.tywh.action.PersonalLeaveAction" scope="prototype">
+		<property name="personalLeaveService" ref="personalLeaveService"></property>
+		<property name="attendanceService" ref="attendanceService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="personalLeaveService" class="com.tywh.service.TPersonalLeaveService">
+		<property name="personalLeaveDao" ref="personalLeaveDao"></property>
+	</bean>
+	
+	<bean id="personalLeaveDao" class="com.tywh.dao.PersonalLeaveDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 考勤配置 -->
+	<bean id="attendance" class="com.tywh.action.AttendanceAction" scope="prototype">
+		<property name="attendanceService" ref="attendanceService"></property>
+		<property name="personalLeaveService" ref="personalLeaveService"></property>
+		<property name="departmentService" ref="departmentService"></property>
+		<property name="userInfoService" ref="userInfoService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="attendanceService" class="com.tywh.service.TAttendanceService">
+		<property name="attendanceDao" ref="attendanceDao"></property>
+	</bean>
+	
+	<bean id="attendanceDao" class="com.tywh.dao.AttendanceDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+	<!-- 订饭配置 -->
+	<bean id="ordermeals" class="com.tywh.action.OrderTheMealsAction" scope="prototype">
+		<property name="orderTheMealsService" ref="orderTheMealsService"></property>
+		<property name="logService" ref="logService"></property>
+	</bean>
+	
+	<bean id="orderTheMealsService" class="com.tywh.service.TOrderTheMealsService">
+		<property name="orderTheMealsDao" ref="orderTheMealsDao"></property>
+	</bean>
+	
+	<bean id="orderTheMealsDao" class="com.tywh.dao.OrderTheMealsDao">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+</beans>
